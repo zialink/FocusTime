@@ -7,7 +7,7 @@ import { fontSize, spacing } from '../../util/sizes';
 import { colors } from '../../util/colors';
 
 export const Focus = ({ addSubject }) => {
-  const [tmpItem, setTmpItem] = useState(null);
+  const [subject, setSubject] = useState(null);
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -16,14 +16,18 @@ export const Focus = ({ addSubject }) => {
           <TextInput
             style={{ flex: 1, marginRight: spacing.md }}
             onSubmitEditing={({ nativeEvent }) => {
-              setTmpItem(nativeEvent.text);
+              setSubject(nativeEvent.text);
             }}
           />
           <RoundedButton
             title="+"
             size={50}
             onPress={() => {
-              addSubject(tmpItem);
+              if (subject) {
+                const CapitalizedSubject =
+                  subject.trim().charAt(0).toUpperCase() + subject.substr(1);
+                addSubject(CapitalizedSubject);
+              }
             }}
           />
         </View>
@@ -34,7 +38,8 @@ export const Focus = ({ addSubject }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0.5,
+    margin: spacing.sm,
   },
   title: {
     color: colors.white,

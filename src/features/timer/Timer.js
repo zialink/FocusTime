@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Vibration, Platform } from 'react-native';
 import { ProgressBar } from 'react-native-paper';
+import {useKeepAwake} from 'expo-keep-awake';
 
 import { CountDown } from '../../components/CountDown';
 import { colors } from '../../util/colors';
@@ -8,13 +9,33 @@ import { spacing } from '../../util/sizes';
 import { RoundedButton } from '../../components/RoundedButton';
 import { Timing } from './Timing';
 
-export const Timer = ({ focusSubject }) => {
+export const Timer = ({ focusSubject, resetFocusSubject, onTimerEnd }) => {
+  useKeepAwake();
+
+  const DEFAULT_TIME = 0.1;
   const [isStarted, setIsStarted] = useState(false);
   const [progress, setProgress] = useState(1);
-  const [minutes, setMinutes] = useState(0)
+  const [minutes, setMinutes] = useState(DEFAULT_TIME)
 
   const onProgress = (progress) => {
     setProgress(progress);
+  }
+
+  const vibrate = () => {
+    if(Platform === "ios") {
+      const interval = setInterval(() => Vibration.vibrate(), 2000 );
+      setTimeout(clearInterval(interval), 2000);
+    } else {
+      Vibration.vibrate(10000);
+    }
+  }
+
+  const onEnd = () => {
+    vibrate();
+    setMinutes(DEFAULT_TIME);
+    setProgress(1);
+    setIsStarted(false);
+    onTimerEnd();
   }
 
   const changeTime = (min) => {
@@ -26,7 +47,7 @@ export const Timer = ({ focusSubject }) => {
   return (
     <View style={styles.container}>
       <View style={styles.countDown}>
-        <CountDown minutes={minutes} isPaused={!isStarted} onProgress={onProgress} />
+        <CountDown minutes={minutes} isPaused={!isStarted} onProgress={onProgress} onEnd={onEnd} />
       </View>
       <View style={styles.progressView}>
         <ProgressBar
@@ -48,6 +69,9 @@ export const Timer = ({ focusSubject }) => {
         ) : (
           <RoundedButton title="start" onPress={() => setIsStarted(true)} />
         )}
+      </View>
+      <View style={styles.clearSubject}>
+          <RoundedButton title="-" size={50} onPress={() => resetFocusSubject()} />
       </View>
     </View>
   );
@@ -87,4 +111,8 @@ const styles = StyleSheet.create({
   progressView: {
     marginTop: spacing.lg,
   },
+  clearSubject: {
+    marginLeft: spacing.sm,
+    marginBottom: spacing.md
+  }
 });
