@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
-import { TextInput } from 'react-native-paper';
+import React, { useState } from "react";
+import { Text, View, StyleSheet } from "react-native";
+import { TextInput } from "react-native-paper";
 
-import { RoundedButton } from '../../components/RoundedButton';
-import { fontSize, spacing } from '../../util/sizes';
-import { colors } from '../../util/colors';
+import { RoundedButton } from "../../components/RoundedButton";
+import { fontSize, spacing } from "../../util/sizes";
+import { colors } from "../../util/colors";
 
 export const Focus = ({ addSubject }) => {
   const [subject, setSubject] = useState(null);
@@ -39,20 +39,21 @@ export const Focus = ({ addSubject }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 0.5,
-    margin: spacing.sm,
+    margin: spacing.md,
+    paddingTop: spacing.md,
   },
   title: {
     color: colors.white,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: fontSize.md,
   },
   titleContainer: {
     flex: 0.5,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   inputContainer: {
     paddingTop: spacing.md,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
 });
